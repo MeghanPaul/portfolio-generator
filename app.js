@@ -1,6 +1,7 @@
 
 const inquirer = require('inquirer');
-const fs = require('fs');
+//const fs = require('fs');
+const {writeFile,copyFile} = require('./utils/generate-site.js');
 const generatePage = require('./src/page-template.js');
 
 /*const pageHTML = generatePage(userName,gitHubName);
@@ -142,6 +143,7 @@ const promptProject = portfolioData => {
         }
     );
 };
+*/
 
 const mockData = {
     
@@ -191,15 +193,43 @@ const mockData = {
 };
   
 
-const pageHTML = generatePage(mockData);
+promptUser() 
+    .then(promptProject)
+    .then(portfolioData => {
+        return generatePage(mockData);
+        //return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return fs.writeFile(pageHTML);
+    })
+    .then(writeFileReponse => {
+        console.log(writeFileReponse);
+        return fs.copyFile();
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err);
+    });
+
+
 
 /*promptUser()
     .then(promptProject)
     .then(portfolioData => {
         const pageHTML = generatePage(portfolioData);
-*/
-    fs.writeFile('./index.html', pageHTML, err => {
+
+    fs.writeFile('./dist/index.html', pageHTML, err => {
         if (err) throw new Error(err);
         console.log('Page created! Check out index.html in this directory to see it!');
         
+        fs.copyFile('./src/style.css','./dist/style.css', err => {
+            if(err) {
+                console.log(err);
+                return;
+            }
+            console.log('Style sheet copied successfully!');
+        })
     });
+*/
